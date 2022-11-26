@@ -1,0 +1,19 @@
+{
+  "name": "scheduling-app-api",
+  "version": "1.0.0",
+  "description": "This is the backend for a MERN stack scheduling application. It provides a collection of users and appointments, doctors and available hours.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.3",
+    "nodemon": "^2.0.20"
+  }
+}
