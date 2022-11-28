@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const appointmentsSchema = mongoose.Schema({
-    appointmentTitle: { type: String, required: true },
-    appointmentDetails: { type: String, required: true },
-    appointmentStart: { type: String, required, required },
-    appointmentEnd: { type: String, required, required }
+    apptTitle: { type: String, required: true },
+    apptDetails: { type: String, required: true },
+    apptStart: { type: String, required: true },
+    apptEnd: { type: String, required: true }
 })
 
 module.exports = {
