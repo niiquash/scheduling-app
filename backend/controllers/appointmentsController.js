@@ -22,10 +22,10 @@ const createAppointment = asyncHandler(async (req, res) => {
     if (!req.user) {
         return res.status(401).send({ message: 'Not Authenticated' })
     }
-    const { apptTitle, apptDetails, apptStart, apptEnd } = req.body;
+    const { apptTitle, apptDetails, apptDate, apptTime } = req.body;
 
     // confirm data
-    if (!apptTitle || !apptDetails || !apptStart || !apptEnd) {
+    if (!apptTitle || !apptDetails || !apptDate || !apptTime) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -36,7 +36,7 @@ const createAppointment = asyncHandler(async (req, res) => {
         return res.status(409).json({ message: 'Duplicate details content' });
     }
 
-    const apptObject = { apptTitle, apptDetails, apptStart, apptEnd };
+    const apptObject = { apptTitle, apptDetails, apptDate, apptTime };
 
     // create and store new appointment
     const appt = await Appointments.model.create(apptObject);
@@ -55,10 +55,10 @@ const updateAppointment = asyncHandler(async (req, res) => {
     if (!req.user) {
         return res.status(401).send({ message: 'Not Authenticated' })
     }
-    const { id, apptTitle, apptDetails, apptStart, apptEnd } = req.body;
+    const { id, apptTitle, apptDetails, apptDate, apptTime } = req.body;
 
     // confirm data
-    if (!id || !apptTitle || !apptDetails || !apptStart || !apptEnd) {
+    if (!id || !apptTitle || !apptDetails || !apptDate || !apptTime) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -78,8 +78,8 @@ const updateAppointment = asyncHandler(async (req, res) => {
 
     appt.apptTitle = apptTitle;
     appt.apptDetails = apptDetails;
-    appt.apptStart = apptStart;
-    appt.apptEnd = apptEnd;
+    appt.apptDate = apptDate;
+    appt.apptTime = apptTime;
 
     const updateAppointment = await appt.save();
 

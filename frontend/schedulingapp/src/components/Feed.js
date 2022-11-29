@@ -1,10 +1,13 @@
-import React from 'react'
+import React from 'react';
+import Appointment from './Appointment';
 
-const Feed = () => {
+const Feed = ({ appointments }) => {
     return (
-        <div>
-
-        </div>
+        <>
+            {appointments.map(appt => (
+                <Appointment key={appt.id} appt={appt} />
+            ))}
+        </>
     )
 }
 

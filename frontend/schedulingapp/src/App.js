@@ -16,26 +16,33 @@ function App() {
       id: 1,
       apptTitle: "Head cold",
       apptDetails: "I need to see a doctor about my cold",
-      apptStart: "9:00 AM",
-      apptEnd: "10:00 AM"
+      apptDate: "July 4, 2022",
+      apptTime: "10:00 AM"
     },
     {
       id: 2,
       apptTitle: "Fever",
       apptDetails: "I experience severly high temperatures at night and I think I might die",
-      apptStart: "9:00 AM",
-      apptEnd: "10:00 AM"
+      apptDate: "May 4, 2022",
+      apptTime: "10:00 AM"
     },
     {
       id: 3,
       apptTitle: "Diarrhea",
       apptDetails: "I'm shitting too often, and it is water water.'",
-      apptStart: "9:00 AM",
-      apptEnd: "10:00 AM"
+      apptDate: "April 4, 2022",
+      apptTime: "10:00 AM"
     },
   ])
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const redirect = useNavigate();
+
+  const handleDelete = (id) => {
+    const apptList = appointments.filter(appt => appt.id !== id);
+    setAppointments(apptList);
+    redirect('/');
+  }
 
   return (
     <div className="App">
@@ -44,7 +51,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home appointments={appointments} />} />
         <Route path="/appointment" element={<NewAppointment />} />
-        <Route path="/appointment/:id" element={<AppointmentPage />} />
+        <Route path="/appointment/:id" element={<AppointmentPage appointments={appointments} handleDelete={handleDelete} />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Missing />} />
       </Routes>
