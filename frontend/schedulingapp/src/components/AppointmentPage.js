@@ -13,6 +13,7 @@ const AppointmentPage = ({ appointments, handleDelete }) => {
                     <>
                         <h2>{appt.apptTitle}</h2>
                         <p className='postDate'>{appt.apptDate}</p>
+                        <p className="postBody">{'Seeing Doctor: '}{appt.apptDoctor}</p>
                         <p className='postBody'>{appt.apptDetails}</p>
                         <button onClick={() => handleDelete(appt.id)}>
                             Cancel Appointment
