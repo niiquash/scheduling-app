@@ -7,12 +7,15 @@ const NewAppointment = ({
     appointmentTitle,
     setAppointmentTitle,
     appointmentDetails,
-    setAppointmentDetails
-
+    setAppointmentDetails,
+    doctors,
+    selectedDoctor,
+    handleDocChange
 }) => {
     return (
         <main className='NewPost'>
             <h2>New Appointment</h2>
+            <DoctorSelect doctors={doctors} selectedDoctor={selectedDoctor} handleDocChange={handleDocChange} />
             <form className='newPostForm' onSubmit={handleSubmit}>
                 <label htmlFor="appointmentTitle">Title: </label>
                 <input

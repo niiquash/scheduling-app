@@ -1,14 +1,14 @@
 import React from 'react'
 import TimeSelect from './TimeSelect'
 
-const DoctorSelect = ({ doctorList, currentDoctor, handleChange, appointmentTime, handleTimeChange, currentDoctorObj }) => {
+const DoctorSelect = ({ doctors, selectedDoctor, handleDocChange }) => {
     return (
-        <div>
+        <div style={{ marginTop: "1rem" }}>
             <label htmlFor="doctors">Who would you like to consult with: </label>
-            <select value={currentDoctor} onChange={handleChange} >
-                <option>--------</option>
-                {doctorList.length &&
-                    doctorList.map(doctor => (
+            <select value={selectedDoctor} onChange={handleDocChange} >
+                <option value={"select Doctor"}>Select Doctor</option>
+                {doctors.length &&
+                    doctors.map(doctor => (
                         <option
                             key={doctor.id}
                             value={doctor.name}
@@ -18,13 +18,6 @@ const DoctorSelect = ({ doctorList, currentDoctor, handleChange, appointmentTime
                     ))
                 }
             </select>
-            {currentDoctorObj &&
-                <TimeSelect
-                    hours={currentDoctorObj.availHours}
-                    appointmentTime={appointmentTime}
-                    handleTimeChange={handleTimeChange}
-                />
-            }
         </div>
     )
 }

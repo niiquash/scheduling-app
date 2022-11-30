@@ -34,6 +34,19 @@ function App() {
       apptTime: "10:00 AM"
     },
   ])
+  const [doctors, setDoctors] = useState([
+    {
+      id: 1,
+      name: "Matthew Allred",
+      AvailHours: ["8:00AM", "9:00AM"]
+    },
+    {
+      id: 2,
+      name: "David Allred",
+      AvailHours: ["8:30AM", "9:30AM"]
+    },
+  ]);
+  const [selectedDoctor, setSelectedDoctor] = useState('');
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [appointmentTitle, setAppointmentTitle] = useState('');
@@ -59,6 +72,14 @@ function App() {
 
   }
 
+  console.log("before", selectedDoctor);
+
+  const handleDocChange = (e) => {
+    setSelectedDoctor(e.target.value);
+  }
+
+  console.log("after", selectedDoctor);
+
   const handleDelete = (id) => {
     const apptList = appointments.filter(appt => appt.id !== id);
     setAppointments(apptList);
@@ -78,6 +99,9 @@ function App() {
             setAppointmentTitle={setAppointmentTitle}
             appointmentDetails={appointmentDetails}
             setAppointmentDetails={setAppointmentDetails}
+            doctors={doctors}
+            selectedDoctor={selectedDoctor}
+            handleDocChange={handleDocChange}
           />} />
         <Route path="/appointment/:id" element={<AppointmentPage appointments={appointments} handleDelete={handleDelete} />} />
         <Route path="/about" element={<About />} />
