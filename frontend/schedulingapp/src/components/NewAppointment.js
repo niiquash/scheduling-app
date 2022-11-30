@@ -1,4 +1,6 @@
 import React from 'react'
+import DoctorSelect from './DoctorSelect'
+
 
 const NewAppointment = ({
     handleSubmit,
