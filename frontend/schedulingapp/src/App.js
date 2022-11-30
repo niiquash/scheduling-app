@@ -36,7 +36,21 @@ function App() {
   ])
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [appointmentTitle, setAppointmentTitle] = useState('');
+  const [appointmentDetails, setAppointmentDetails] = useState('');
   const redirect = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const id = appointments.length ? appointments[appointments.length - 1].id + 1 : 1;
+    const newAppointment = { id, apptTitle: appointmentTitle, apptDetails: appointmentDetails };
+    const allAppointments = [...appointments, newAppointment];
+    setAppointments(allAppointments);
+    setAppointmentTitle('');
+    setAppointmentDetails('');
+    redirect('/');
+
+  }
 
   const handleDelete = (id) => {
     const apptList = appointments.filter(appt => appt.id !== id);
@@ -50,7 +64,14 @@ function App() {
       <Nav search={search} setSearch={setSearch} />
       <Routes>
         <Route path="/" element={<Home appointments={appointments} />} />
-        <Route path="/appointment" element={<NewAppointment />} />
+        <Route path="/appointment"
+          element={<NewAppointment
+            handleSubmit={handleSubmit}
+            appointmentTitle={appointmentTitle}
+            setAppointmentTitle={setAppointmentTitle}
+            appointmentDetails={appointmentDetails}
+            setAppointmentDetails={setAppointmentDetails}
+          />} />
         <Route path="/appointment/:id" element={<AppointmentPage appointments={appointments} handleDelete={handleDelete} />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Missing />} />
