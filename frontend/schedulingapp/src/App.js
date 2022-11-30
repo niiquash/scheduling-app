@@ -40,6 +40,13 @@ function App() {
   const [appointmentDetails, setAppointmentDetails] = useState('');
   const redirect = useNavigate();
 
+  useEffect(() => {
+    const filteredResults = appointments.filter((appt) =>
+      ((appt.apptDetails).toLowerCase()).includes(search.toLowerCase())
+      || ((appt.apptTitle).toLowerCase()).includes(search.toLowerCase()))
+    setSearchResults(filteredResults.reverse());
+  }, [appointments, search])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const id = appointments.length ? appointments[appointments.length - 1].id + 1 : 1;
@@ -63,7 +70,7 @@ function App() {
       <Header title={"Appointment Scheduler"} />
       <Nav search={search} setSearch={setSearch} />
       <Routes>
-        <Route path="/" element={<Home appointments={appointments} />} />
+        <Route path="/" element={<Home appointments={searchResults} />} />
         <Route path="/appointment"
           element={<NewAppointment
             handleSubmit={handleSubmit}
