@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
@@ -8,6 +9,7 @@ import About from './components/About';
 import Missing from './components/Missing';
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
+import UselessComponent from './components/UselessComponent';
 
 function App() {
 
@@ -105,6 +107,7 @@ function App() {
           />} />
         <Route path="/appointment/:id" element={<AppointmentPage appointments={appointments} handleDelete={handleDelete} />} />
         <Route path="/about" element={<About />} />
+        <Route path="/useless" element={<UselessComponent />} />
         <Route path="*" element={<Missing />} />
       </Routes>
       <Footer />
