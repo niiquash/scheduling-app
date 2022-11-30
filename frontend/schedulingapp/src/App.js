@@ -8,8 +8,6 @@ import About from './components/About';
 import Missing from './components/Missing';
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { MongoCursorInUseError } from 'mongodb';
 
 function App() {
 
@@ -17,7 +15,6 @@ function App() {
     {
       id: 1,
       apptTitle: "Head cold",
-      apptDoctor: "John Doe",
       apptDetails: "I need to see a doctor about my cold",
       apptDate: "July 4, 2022",
       apptTime: "10:00 AM"
@@ -25,7 +22,6 @@ function App() {
     {
       id: 2,
       apptTitle: "Fever",
-      apptDoctor: "John Doe",
       apptDetails: "I experience severly high temperatures at night and I think I might die",
       apptDate: "May 4, 2022",
       apptTime: "10:00 AM"
@@ -33,7 +29,6 @@ function App() {
     {
       id: 3,
       apptTitle: "Diarrhea",
-      apptDoctor: "John Doe",
       apptDetails: "I'm shitting too often, and it is water water.'",
       apptDate: "April 4, 2022",
       apptTime: "10:00 AM"
@@ -61,13 +56,6 @@ function App() {
     const apptList = appointments.filter(appt => appt.id !== id);
     setAppointments(apptList);
     redirect('/');
-  }
-
-
-  const handleChange = (e) => {
-    setCurrentDoctor(e.target.value);
-    const selectedDoctor = doctorList.filter(doc => doc.name === currentDoctor);
-    setCurrentDoctorObj(selectedDoctor);
   }
 
   return (
