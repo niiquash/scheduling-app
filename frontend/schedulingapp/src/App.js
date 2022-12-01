@@ -48,6 +48,15 @@ function App() {
       AvailHours: ["8:30AM", "9:30AM"]
     },
   ]);
+  const ailments = [
+    "Allergies",
+    "Colds and Flu",
+    "Conjunctivitis (pink eye)",
+    "Diarrhea",
+    "Headaches",
+    "Mononucleosis",
+    "Stomach Aches"
+  ]
   const [selectedDoctor, setSelectedDoctor] = useState({});
   const [apptTime, setApptTime] = useState('');
   const [search, setSearch] = useState('');
@@ -100,6 +109,11 @@ function App() {
     setSelectedDoctor(doc);
   }
 
+  const handleSelect = (e) => {
+    console.log(e);
+    setAppointmentTitle(e);
+  }
+
   // console.log("after", selectedDoctor);
   console.log(apptTime);
 
@@ -129,6 +143,8 @@ function App() {
             apptTime={apptTime}
             startDate={startDate}
             setStartDate={setStartDate}
+            ailments={ailments}
+            handleSelect={handleSelect}
           />} />
         <Route path="/appointment/:id"
           element={<AppointmentPage

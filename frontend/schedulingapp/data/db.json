@@ -1,0 +1,68 @@
+{
+    "appointments": [
+        {
+            "id": 1,
+            "overview": "Headaches",
+            "details": "I have way too many headaches.",
+            "date": "Wed Nov 30 2022 00:00:00 GMT-0700 (Mountain Standard Time)",
+            "time": "9:30 AM",
+            "doctor": "David Allred"
+        },
+        {
+            "id": 2,
+            "overview": "Stomach Ache",
+            "details": "I have way too many stomach ache.",
+            "date": "Wed Nov 30 2022 00:00:00 GMT-0700 (Mountain Standard Time)",
+            "time": "9:30 AM",
+            "doctor": "Matthew Allred"
+        }
+    ],
+    "doctors": [
+        {
+            "id": 1,
+            "name": "David Allred",
+            "availHours": [
+                "8:00 AM",
+                "9:30 AM"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Matthew Allred",
+            "availHours": [
+                "8:30 AM",
+                "9:45 AM"
+            ]
+        }
+    ],
+    "ailments": [
+        {
+            "id": 1,
+            "name": "Allergies"
+        },
+        {
+            "id": 2,
+            "name": "Colds and Flu"
+        },
+        {
+            "id": 3,
+            "name": "Conjuctivitis (pink eye)"
+        },
+        {
+            "id": 4,
+            "name": "Diarrhea"
+        },
+        {
+            "id": 5,
+            "name": "Headaches"
+        },
+        {
+            "id": 6,
+            "name": "Mononucleosis"
+        },
+        {
+            "id": 7,
+            "name": "Stomach Aches"
+        }
+    ]
+}
