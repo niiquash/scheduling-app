@@ -1,7 +1,8 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
-const AppointmentPage = ({ appointments, handleDelete }) => {
+const AppointmentPage = ({ appointments, handleDelete, selectedDoctor, apptTime, startDate }) => {
 
     const { id } = useParams();
     const appt = appointments.find(appt => (appt.id).toString() === id);
@@ -10,15 +11,16 @@ const AppointmentPage = ({ appointments, handleDelete }) => {
         <main className='PostPage'>
             <article className='post'>
                 {appt &&
-                    <>
+                    <p>
                         <h2>{appt.apptTitle}</h2>
-                        <p className='postDate'>{appt.apptDate}</p>
-                        <p className="postBody">{'Seeing Doctor: '}{appt.apptDoctor}</p>
-                        <p className='postBody'>{appt.apptDetails}</p>
+                        <p className="postBody">Date: {format(new Date(appt.apptDate), 'MMMM dd, yyyy')}</p>
+                        <p className="postBody">Doctor: {selectedDoctor.name}</p>
+                        <p className="postBody">Time: {apptTime}</p>
+                        <p className='postBody'>Details: {appt.apptDetails}</p>
                         <button onClick={() => handleDelete(appt.id)}>
                             Cancel Appointment
                         </button>
-                    </>
+                    </p>
                 }
                 {!appt &&
                     <>

@@ -1,10 +1,16 @@
 import React from 'react'
 
-const DoctorDetails = ({ doctor }) => {
+const DoctorDetails = ({ doctor, handleTimeChange }) => {
     return (
         <div>
             {doctor.AvailHours.map(hours => (
-                <p key={hours}>{hours}</p>
+                <div
+                    className='timeBtn'
+                    key={hours}
+                    onClick={handleTimeChange}
+                >
+                    {hours}
+                </div>
             ))}
 
         </div>

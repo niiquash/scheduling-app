@@ -2,13 +2,8 @@ import React from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import DoctorDetails from './DoctorDetails';
-import { useState } from 'react';
-// import TimeSelect from './TimeSelect'
 
-const DoctorSelect = ({ doctors, selectedDoctor, handleDocChange }) => {
-
-    const [key, setKey] = useState(doctors[0].name);
-
+const DoctorSelect = ({ doctors, handleTimeChange, handleDocChange }) => {
 
     return (
         <div style={{ marginTop: "1rem" }}>
@@ -26,16 +21,21 @@ const DoctorSelect = ({ doctors, selectedDoctor, handleDocChange }) => {
                     ))
                 }
             </select> */}
+            <p>Select a doctor to view available hours</p>
             <Tabs
-                id="controlled-tab-example"
-                activeKey={key}
-                onSelect={(k) => setKey(k)}
+                id="doctors"
+                defaultActiveKey={doctors[0].id}
+                onSelect={handleDocChange}
                 className="mb-3"
             >
                 {doctors.length &&
                     doctors.map(doctor => (
-                        <Tab eventKey={doctor.id} key={doctor.id} title={doctor.name}>
-                            <DoctorDetails doctor={doctor} />
+                        <Tab
+                            eventKey={doctor.id}
+                            key={doctor.id}
+                            title={doctor.name}
+                        >
+                            <DoctorDetails doctor={doctor} handleTimeChange={handleTimeChange} />
                         </Tab>
                     ))
                 }

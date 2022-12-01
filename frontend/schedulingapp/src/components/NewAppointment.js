@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DoctorSelect from './DoctorSelect'
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 const NewAppointment = ({
@@ -9,14 +12,45 @@ const NewAppointment = ({
     appointmentDetails,
     setAppointmentDetails,
     doctors,
+    handleDocChange,
+    handleTimeChange,
     selectedDoctor,
-    handleDocChange
+    apptTime,
+    startDate,
+    setStartDate
 }) => {
     return (
         <main className='NewPost'>
             <h2>New Appointment</h2>
-            <DoctorSelect doctors={doctors} selectedDoctor={selectedDoctor} handleDocChange={handleDocChange} />
             <form className='newPostForm' onSubmit={handleSubmit}>
+
+                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                <input type="text" value={startDate} hidden />
+
+                <DoctorSelect
+                    doctors={doctors}
+                    handleDocChange={handleDocChange}
+                    handleTimeChange={handleTimeChange}
+                />
+                <hr />
+                <label htmlFor="startDate">Appointment Date: </label>
+                <input type="text"
+                    value={startDate}
+                    id="startDate"
+                    readOnly
+                />
+                <label htmlFor="docName">Your Doctor: </label>
+                <input type="text"
+                    value={selectedDoctor.name}
+                    id="docName"
+                    readOnly
+                />
+                <label htmlFor="apptTime">Appointment Time: </label>
+                <input type="text"
+                    value={apptTime}
+                    id="apptTime"
+                    readOnly
+                />
                 <label htmlFor="appointmentTitle">Title: </label>
                 <input
                     id="appointmentTitle"

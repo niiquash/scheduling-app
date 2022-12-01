@@ -48,11 +48,14 @@ function App() {
       AvailHours: ["8:30AM", "9:30AM"]
     },
   ]);
-  const [selectedDoctor, setSelectedDoctor] = useState('');
+  const [selectedDoctor, setSelectedDoctor] = useState({});
+  const [apptTime, setApptTime] = useState('');
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [appointmentTitle, setAppointmentTitle] = useState('');
   const [appointmentDetails, setAppointmentDetails] = useState('');
+  const [startDate, setStartDate] = useState('');
+
   const redirect = useNavigate();
 
   useEffect(() => {
@@ -62,25 +65,43 @@ function App() {
     setSearchResults(filteredResults.reverse());
   }, [appointments, search])
 
+  console.log(startDate);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const id = appointments.length ? appointments[appointments.length - 1].id + 1 : 1;
-    const newAppointment = { id, apptTitle: appointmentTitle, apptDetails: appointmentDetails };
+    const date = startDate.toString();
+    const newAppointment = { id, apptTitle: appointmentTitle, apptDetails: appointmentDetails, apptDate: date };
     const allAppointments = [...appointments, newAppointment];
     setAppointments(allAppointments);
     setAppointmentTitle('');
     setAppointmentDetails('');
+    setStartDate('');
     redirect('/');
 
   }
 
-  console.log("before", selectedDoctor);
-
-  const handleDocChange = (e) => {
-    setSelectedDoctor(e.target.value);
+  const handleTimeChange = (e) => {
+    if (e.target.classList.contains('timeBtn')) {
+      e.target.classList.add('selected')
+      e.target.classList.remove('timeBtn')
+    } else {
+      e.target.classList.add('timeBtn')
+      e.target.classList.remove('selected')
+    }
+    setApptTime(e.target.innerHTML);
   }
 
-  console.log("after", selectedDoctor);
+  const handleDocChange = (key) => {
+    // console.log(key)
+    // console.log(doctors)
+    // console.log(doc)
+    const doc = doctors.find(doc => doc.id === Number(key));
+    setSelectedDoctor(doc);
+  }
+
+  // console.log("after", selectedDoctor);
+  console.log(apptTime);
 
   const handleDelete = (id) => {
     const apptList = appointments.filter(appt => appt.id !== id);
@@ -102,10 +123,22 @@ function App() {
             appointmentDetails={appointmentDetails}
             setAppointmentDetails={setAppointmentDetails}
             doctors={doctors}
-            selectedDoctor={selectedDoctor}
             handleDocChange={handleDocChange}
+            handleTimeChange={handleTimeChange}
+            selectedDoctor={selectedDoctor}
+            apptTime={apptTime}
+            startDate={startDate}
+            setStartDate={setStartDate}
           />} />
-        <Route path="/appointment/:id" element={<AppointmentPage appointments={appointments} handleDelete={handleDelete} />} />
+        <Route path="/appointment/:id"
+          element={<AppointmentPage
+            appointments={appointments}
+            handleDelete={handleDelete}
+            selectedDoctor={selectedDoctor}
+            apptTime={apptTime}
+            startDate={startDate}
+          />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="/useless" element={<UselessComponent />} />
         <Route path="*" element={<Missing />} />
