@@ -5,7 +5,7 @@ const Feed = ({ appointments }) => {
     return (
         <>
             {appointments.map(appt => (
-                <Appointment key={appt.id} appt={appt} />
+                <Appointment key={appt._id} appt={appt} />
             ))}
         </>
     )

@@ -8,17 +8,18 @@ const DoctorSelect = ({ doctors, handleTimeChange, handleDocChange }) => {
     return (
         <div style={{ marginTop: "1rem" }}>
             <p>Select a doctor to view available hours</p>
+            {/* {console.log(doctors[0]?.name)} */}
             <Tabs
                 id="doctors"
-                defaultActiveKey={doctors[0].id}
+                defaultActiveKey={doctors[0]?._id}
                 onSelect={handleDocChange}
                 className="mb-3"
             >
                 {doctors.length &&
-                    doctors.map(doctor => (
+                    doctors?.map(doctor => (
                         <Tab
-                            eventKey={doctor.id}
-                            key={doctor.id}
+                            eventKey={doctor._id}
+                            key={doctor._id}
                             title={doctor.name}
                         >
                             <DoctorDetails doctor={doctor} handleTimeChange={handleTimeChange} />

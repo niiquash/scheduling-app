@@ -6,7 +6,7 @@ const loadUser = require('../middleware/loadUser');
 router.use([loadUser]);
 router.get('/', appointmentsController.getAppointments);
 router.post('/', appointmentsController.createAppointment);
-router.patch('/', appointmentsController.updateAppointment);
-router.delete('/', appointmentsController.deleteAppointment);
+router.put('/:id', appointmentsController.updateAppointment);
+router.delete('/:id', appointmentsController.deleteAppointment);
 
 module.exports = router;

@@ -2,25 +2,30 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
-const AppointmentPage = ({ appointments, handleDelete, selectedDoctor, apptTime, startDate }) => {
+const AppointmentPage = ({ appointments, handleDelete }) => {
 
     const { id } = useParams();
-    const appt = appointments.find(appt => (appt.id).toString() === id);
+    const appt = appointments?.find(appt => (appt._id).toString() === id);
 
     return (
         <main className='PostPage'>
             <article className='post'>
                 {appt &&
-                    <p>
+                    <>
                         <h2>{appt.apptTitle}</h2>
-                        <p className="postBody">Date: {format(new Date(appt.apptDate), 'MMMM dd, yyyy')}</p>
-                        <p className="postBody">Doctor: {selectedDoctor.name}</p>
-                        <p className="postBody">Time: {apptTime}</p>
-                        <p className='postBody'>Details: {appt.apptDetails}</p>
-                        <button onClick={() => handleDelete(appt.id)}>
+                        <p className="postBody">Date: {format(new Date(appt.date), 'MMMM dd, yyyy')}</p>
+                        <p className="postBody">Doctor: {appt.doctor}</p>
+                        <p className="postBody">Time: {appt.time}</p>
+                        <p className='postBody'>Details: {appt.details}</p>
+                        <Link to={`/edit/${appt._id}`}>
+                            <button
+                                className="editButton"
+                            >Edit Appointment</button>
+                        </Link>
+                        <button onClick={() => handleDelete(appt._id)}>
                             Cancel Appointment
                         </button>
-                    </p>
+                    </>
                 }
                 {!appt &&
                     <>

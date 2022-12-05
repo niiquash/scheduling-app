@@ -7,87 +7,143 @@ import NewAppointment from './components/NewAppointment';
 import AppointmentPage from './components/AppointmentPage';
 import About from './components/About';
 import Missing from './components/Missing';
+import EditAppointment from './components/EditAppointment';
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
-import UselessComponent from './components/UselessComponent';
+import api from './api/appointments';
 
 function App() {
 
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      apptTitle: "Head cold",
-      apptDetails: "I need to see a doctor about my cold",
-      apptDate: "July 4, 2022",
-      apptTime: "10:00 AM"
-    },
-    {
-      id: 2,
-      apptTitle: "Fever",
-      apptDetails: "I experience severly high temperatures at night and I think I might die",
-      apptDate: "May 4, 2022",
-      apptTime: "10:00 AM"
-    },
-    {
-      id: 3,
-      apptTitle: "Diarrhea",
-      apptDetails: "I'm shitting too often, and it is water water.'",
-      apptDate: "April 4, 2022",
-      apptTime: "10:00 AM"
-    },
-  ])
-  const [doctors, setDoctors] = useState([
-    {
-      id: 1,
-      name: "Matthew Allred",
-      AvailHours: ["8:00AM", "9:00AM"]
-    },
-    {
-      id: 2,
-      name: "David Allred",
-      AvailHours: ["8:30AM", "9:30AM"]
-    },
-  ]);
-  const ailments = [
-    "Allergies",
-    "Colds and Flu",
-    "Conjunctivitis (pink eye)",
-    "Diarrhea",
-    "Headaches",
-    "Mononucleosis",
-    "Stomach Aches"
-  ]
+  const [appointments, setAppointments] = useState([])
+  const [doctors, setDoctors] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState({});
   const [apptTime, setApptTime] = useState('');
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [appointmentTitle, setAppointmentTitle] = useState('');
   const [appointmentDetails, setAppointmentDetails] = useState('');
+  const [editTitle, setEditTitle] = useState('');
+  const [editDetails, setEditDetails] = useState('');
   const [startDate, setStartDate] = useState('');
-
+  const [illness, setIllness] = useState([]);
   const redirect = useNavigate();
 
+  // Fetch the doctors list
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await api.get("/doctors");
+        setDoctors(response.data);
+      } catch (err) {
+        if (err.response) {
+          // Not in the 200! response range
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`)
+        }
+      }
+    }
+    fetchDoctors();
+  }, []);
+
+  // Fetch the ailments list
+  useEffect(() => {
+    const fetchAilments = async () => {
+      try {
+        const response = await api.get("/ailments");
+        setIllness(response.data);
+      } catch (err) {
+        if (err.response) {
+          // Not in the 200! response range
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`)
+        }
+      }
+    }
+    fetchAilments();
+  }, []);
+
+  const ailments = illness.map(item => item.name)
+
+  // Fetch appointments object
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await api.get("/appointments");
+        setAppointments(response.data);
+      } catch (err) {
+        if (err.response) {
+          // Not in the 200! response range
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`)
+        }
+      }
+    }
+    fetchAppointments();
+  }, []);
+
+  // Functionality for search button in home page
   useEffect(() => {
     const filteredResults = appointments.filter((appt) =>
-      ((appt.apptDetails).toLowerCase()).includes(search.toLowerCase())
-      || ((appt.apptTitle).toLowerCase()).includes(search.toLowerCase()))
+      ((appt.details).toLowerCase()).includes(search.toLowerCase())
+      || ((appt.overview).toLowerCase()).includes(search.toLowerCase()))
     setSearchResults(filteredResults.reverse());
   }, [appointments, search])
 
-  console.log(startDate);
 
-  const handleSubmit = (e) => {
+  // Create appointment
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const id = appointments.length ? appointments[appointments.length - 1].id + 1 : 1;
     const date = startDate.toString();
-    const newAppointment = { id, apptTitle: appointmentTitle, apptDetails: appointmentDetails, apptDate: date };
-    const allAppointments = [...appointments, newAppointment];
-    setAppointments(allAppointments);
-    setAppointmentTitle('');
-    setAppointmentDetails('');
-    setStartDate('');
+    const newAppointment = { id, overview: appointmentTitle, details: appointmentDetails, date, time: apptTime, doctor: selectedDoctor.name };
+    try {
+      const response = await api.post('appointments', newAppointment);
+      const allAppointments = [...appointments, response.data];
+      setAppointments(allAppointments);
+      setAppointmentTitle('');
+      setAppointmentDetails('');
+      setStartDate('');
+      setSelectedDoctor({})
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
     redirect('/');
+  }
 
+  // Delete appointment
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/appointments/${id}`)
+      const apptList = appointments.filter(appt => appt._id !== id);
+      setAppointments(apptList);
+      redirect('/');
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  }
+
+  // Update appointment
+  const handleEdit = async (_id) => {
+    const date = startDate.toString();
+    const updatedAppointment = { _id, overview: editTitle, details: editDetails, date, time: apptTime, doctor: selectedDoctor.name };
+    try {
+      const response = await api.put(`/appointments/${_id}`, updatedAppointment);
+      setAppointments(appointments.map(appt => appt._id === _id ? { ...response.data } : appt))
+      setEditTitle('');
+      setEditDetails('');
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+    redirect('/');
   }
 
   const handleTimeChange = (e) => {
@@ -102,10 +158,8 @@ function App() {
   }
 
   const handleDocChange = (key) => {
-    // console.log(key)
-    // console.log(doctors)
+    const doc = doctors.find(doc => doc._id.toString() === key);
     // console.log(doc)
-    const doc = doctors.find(doc => doc.id === Number(key));
     setSelectedDoctor(doc);
   }
 
@@ -114,21 +168,31 @@ function App() {
     setAppointmentTitle(e);
   }
 
-  // console.log("after", selectedDoctor);
-  console.log(apptTime);
-
-  const handleDelete = (id) => {
-    const apptList = appointments.filter(appt => appt.id !== id);
-    setAppointments(apptList);
-    redirect('/');
-  }
-
   return (
     <div className="App">
       <Header title={"Appointment Scheduler"} />
       <Nav search={search} setSearch={setSearch} />
       <Routes>
         <Route path="/" element={<Home appointments={searchResults} />} />
+        <Route path="/edit/:id"
+          element={<EditAppointment
+            appointments={appointments}
+            handleEdit={handleEdit}
+            editDetails={editDetails}
+            setEditDetails={setEditDetails}
+            editTitle={editTitle}
+            setEditTitle={setEditTitle}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            doctors={doctors}
+            handleDocChange={handleDocChange}
+            handleTimeChange={handleTimeChange}
+            selectedDoctor={selectedDoctor}
+            apptTime={apptTime}
+            appointmentTitle={appointmentTitle}
+            ailments={ailments}
+            handleSelect={handleSelect}
+          />} />
         <Route path="/appointment"
           element={<NewAppointment
             handleSubmit={handleSubmit}
@@ -156,7 +220,6 @@ function App() {
           />}
         />
         <Route path="/about" element={<About />} />
-        <Route path="/useless" element={<UselessComponent />} />
         <Route path="*" element={<Missing />} />
       </Routes>
       <Footer />

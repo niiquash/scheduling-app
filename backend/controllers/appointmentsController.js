@@ -5,9 +5,6 @@ const asyncHandler = require('express-async-handler');
 // @route GET /appointments
 // @access Private
 const getAppointments = asyncHandler(async (req, res) => {
-    if (!req.user) {
-        return res.status(401).send({ message: 'Not Authenticated' })
-    }
     const appts = await Appointments.model.find().lean();
     if (!appts) {
         return res.status(400).json({ message: 'No appointments found' });
@@ -19,32 +16,18 @@ const getAppointments = asyncHandler(async (req, res) => {
 // @route POST /appointments
 // @access Private
 const createAppointment = asyncHandler(async (req, res) => {
-    if (!req.user) {
-        return res.status(401).send({ message: 'Not Authenticated' })
-    }
-    const { apptTitle, apptDetails, apptDate, apptTime } = req.body;
-
-    // confirm data
-    if (!apptTitle || !apptDetails || !apptDate || !apptTime) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    // check for duplicate
-    const duplicate = await Appointments.model.findOne({ apptDetails }).lean().exec();
-
-    if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate details content' });
-    }
-
-    const apptObject = { apptTitle, apptDetails, apptDate, apptTime };
-
-    // create and store new appointment
-    const appt = await Appointments.model.create(apptObject);
-
-    if (appt) { // if created
-        res.status(201).json({ message: 'New appointment created' });
-    } else {
-        res.status(400).json({ message: 'There was a problem creating an appointment' });
+    try {
+        const appointment = new Appointments.model({
+            overview: req.body.overview,
+            details: req.body.details,
+            date: req.body.date,
+            time: req.body.time,
+            doctor: req.body.doctor
+        });
+        const savedAppointment = await appointment.save();
+        return res.status(201).json(savedAppointment._id);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 })
 
@@ -52,64 +35,36 @@ const createAppointment = asyncHandler(async (req, res) => {
 // @route PATCH /appointment/:id
 // @access Private
 const updateAppointment = asyncHandler(async (req, res) => {
-    if (!req.user) {
-        return res.status(401).send({ message: 'Not Authenticated' })
+    try {
+        const id = req.params.id;
+        const appointment = await Appointments.model.findByIdAndUpdate(
+            id, req.body, { useFindAndModify: false }
+        );
+        if (!appointment) {
+            return res.status(404).send({ message: `Cannot update appointment with id=${id}` });
+        } else {
+            res.status(204).send({ message: 'Appointment successfully updated.' })
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
-    const { id, apptTitle, apptDetails, apptDate, apptTime } = req.body;
-
-    // confirm data
-    if (!id || !apptTitle || !apptDetails || !apptDate || !apptTime) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    // find appointment by id
-    const appt = await Appointments.model.findById(id).exec();
-
-    if (!appt) {
-        return res.status(400).json({ message: 'Appointment not found' });
-    }
-
-    // check for duplicate
-    const duplicate = await Appointments.model.findOne({ apptDetails }).lean().exec()
-    // Allow updates to the original appointment
-    if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate appointment' })
-    }
-
-    appt.apptTitle = apptTitle;
-    appt.apptDetails = apptDetails;
-    appt.apptDate = apptDate;
-    appt.apptTime = apptTime;
-
-    const updateAppointment = await appt.save();
-
-    res.json({ message: 'Appointment updated' })
 })
 
 // @desc Delete one appointment
 // @route DELETE /appointment/:id
 // @access Private
 const deleteAppointment = asyncHandler(async (req, res) => {
-    if (!req.user) {
-        return res.status(401).send({ message: 'Not Authenticated' })
+    try {
+        const id = req.params.id;
+        const removedAppointment = await Appointments.model.findByIdAndRemove(id);
+        if (!removedAppointment) {
+            res.status(404).send({ message: `Cannot delete appointment with id=${id}` })
+        } else {
+            res.status(200).send({ message: 'Appointment deleted successfully.' })
+        }
+    } catch (err) {
+        res.status(500).send({ message: e.message });
     }
-    const { id } = req.body
-
-    if (!id) {
-        return res.status(400).json({ message: 'Appointment ID Required' })
-    }
-
-    const appt = await Appointments.model.findById(id).exec()
-
-    if (!appt) {
-        return res.status(400).json({ message: 'Appointment not found' })
-    }
-
-    const result = await appt.deleteOne()
-
-    const reply = `Appointment ${result.title} with ID ${result._id} deleted`
-
-    res.json(reply)
 })
 
 module.exports = {
