@@ -1,9 +1,12 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { format } from 'date-fns';
+import { useContext } from 'react';
+import DataContext from '../context/DataContext';
 
-const AppointmentPage = ({ appointments, handleDelete }) => {
+const AppointmentPage = () => {
 
+    const { appointments, handleDelete } = useContext(DataContext);
     const { id } = useParams();
     const appt = appointments?.find(appt => (appt._id).toString() === id);
 

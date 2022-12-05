@@ -6,25 +6,29 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { useContext } from 'react';
+import DataContext from '../context/DataContext';
 
-const EditAppointment = ({
-    appointments,
-    handleEdit,
-    editDetails,
-    setEditDetails,
-    editTitle,
-    setEditTitle,
-    startDate,
-    setStartDate,
-    doctors,
-    handleDocChange,
-    handleTimeChange,
-    selectedDoctor,
-    apptTime,
-    appointmentTitle,
-    ailments,
-    handleSelect,
-}) => {
+const EditAppointment = () => {
+
+    const {
+        appointments,
+        handleEdit,
+        editDetails,
+        setEditDetails,
+        editTitle,
+        setEditTitle,
+        startDate,
+        setStartDate,
+        doctors,
+        handleDocChange,
+        handleTimeChange,
+        selectedDoctor,
+        apptTime,
+        appointmentTitle,
+        ailments,
+        handleSelect
+    } = useContext(DataContext);
 
     const { id } = useParams();
     const appointment = appointments.find(appt => (appt._id).toString() === id);

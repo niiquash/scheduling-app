@@ -3,24 +3,27 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { useContext } from 'react';
+import DataContext from '../context/DataContext';
 
+const NewAppointment = () => {
 
+    const {
+        handleSubmit,
+        appointmentTitle,
+        appointmentDetails,
+        setAppointmentDetails,
+        doctors,
+        handleDocChange,
+        handleTimeChange,
+        selectedDoctor,
+        apptTime,
+        startDate,
+        setStartDate,
+        ailments,
+        handleSelect
+    } = useContext(DataContext);
 
-const NewAppointment = ({
-    handleSubmit,
-    appointmentTitle,
-    appointmentDetails,
-    setAppointmentDetails,
-    doctors,
-    handleDocChange,
-    handleTimeChange,
-    selectedDoctor,
-    apptTime,
-    startDate,
-    setStartDate,
-    ailments,
-    handleSelect
-}) => {
     return (
         <main className='NewPost'>
             <h2>New Appointment</h2>
