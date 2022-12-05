@@ -11,6 +11,8 @@ import EditAppointment from './components/EditAppointment';
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import api from './api/appointments';
+import useWindowSize from './hooks/useWindowSize';
+import useAxiosFetch from './hooks/useAxiosFetch';
 
 function App() {
 
@@ -27,68 +29,86 @@ function App() {
   const [startDate, setStartDate] = useState('');
   const [illness, setIllness] = useState([]);
   const redirect = useNavigate();
+  const { width } = useWindowSize();
 
-  // Fetch the doctors list
+  // Fetch appointments object
+  const { appts, fetchError, isLoading } = useAxiosFetch("http://localhost:8080/appointments");
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await api.get("/doctors");
-        setDoctors(response.data);
-      } catch (err) {
-        if (err.response) {
-          // Not in the 200! response range
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else {
-          console.log(`Error: ${err.message}`)
-        }
-      }
-    }
-    fetchDoctors();
-  }, []);
+    setAppointments(appts);
+  }, [appts])
+
+  // Fetch doctors list
+  const { dcs } = useAxiosFetch("http://localhost:8080/doctors");
+  useEffect(() => {
+    setDoctors(dcs);
+  }, [dcs])
+
+  // Fetch list of ailments
+  const { ills } = useAxiosFetch("http://localhost:8080/ailments");
+  useEffect(() => {
+    setIllness(ills);
+  }, [ills])
+
+  // // Fetch the doctors list
+  // useEffect(() => {
+  //   const fetchDoctors = async () => {
+  //     try {
+  //       const response = await api.get("/doctors");
+  //       setDoctors(response.data);
+  //     } catch (err) {
+  //       if (err.response) {
+  //         // Not in the 200! response range
+  //         console.log(err.response.data);
+  //         console.log(err.response.status);
+  //         console.log(err.response.headers);
+  //       } else {
+  //         console.log(`Error: ${err.message}`)
+  //       }
+  //     }
+  //   }
+  //   fetchDoctors();
+  // }, []);
 
   // Fetch the ailments list
-  useEffect(() => {
-    const fetchAilments = async () => {
-      try {
-        const response = await api.get("/ailments");
-        setIllness(response.data);
-      } catch (err) {
-        if (err.response) {
-          // Not in the 200! response range
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else {
-          console.log(`Error: ${err.message}`)
-        }
-      }
-    }
-    fetchAilments();
-  }, []);
+  // useEffect(() => {
+  //   const fetchAilments = async () => {
+  //     try {
+  //       const response = await api.get("/ailments");
+  //       setIllness(response.data);
+  //     } catch (err) {
+  //       if (err.response) {
+  //         // Not in the 200! response range
+  //         console.log(err.response.data);
+  //         console.log(err.response.status);
+  //         console.log(err.response.headers);
+  //       } else {
+  //         console.log(`Error: ${err.message}`)
+  //       }
+  //     }
+  //   }
+  //   fetchAilments();
+  // }, []);
 
   const ailments = illness.map(item => item.name)
 
-  // Fetch appointments object
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await api.get("/appointments");
-        setAppointments(response.data);
-      } catch (err) {
-        if (err.response) {
-          // Not in the 200! response range
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else {
-          console.log(`Error: ${err.message}`)
-        }
-      }
-    }
-    fetchAppointments();
-  }, []);
+  // useEffect(() => {
+  //   const fetchAppointments = async () => {
+  //     try {
+  //       const response = await api.get("/appointments");
+  //       setAppointments(response.data);
+  //     } catch (err) {
+  //       if (err.response) {
+  //         // Not in the 200! response range
+  //         console.log(err.response.data);
+  //         console.log(err.response.status);
+  //         console.log(err.response.headers);
+  //       } else {
+  //         console.log(`Error: ${err.message}`)
+  //       }
+  //     }
+  //   }
+  //   fetchAppointments();
+  // }, []);
 
   // Functionality for search button in home page
   useEffect(() => {
@@ -170,10 +190,17 @@ function App() {
 
   return (
     <div className="App">
-      <Header title={"Appointment Scheduler"} />
+      <Header title={"Appointment Scheduler"} width={width} />
       <Nav search={search} setSearch={setSearch} />
       <Routes>
-        <Route path="/" element={<Home appointments={searchResults} />} />
+        <Route path="/"
+          element={<Home
+            appointments={searchResults}
+            fetchError={fetchError}
+            isLoading={isLoading}
+          />}
+
+        />
         <Route path="/edit/:id"
           element={<EditAppointment
             appointments={appointments}
