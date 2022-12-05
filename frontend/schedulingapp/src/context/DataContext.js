@@ -43,7 +43,7 @@ export const DataProvider = ({ children }) => {
 
     const ailments = illness.map(item => item.name)
 
-    // Functionality for search button in home page
+    // Search button in home page
     useEffect(() => {
         const filteredResults = appointments.filter((appt) =>
             ((appt.details).toLowerCase()).includes(search.toLowerCase())
@@ -64,11 +64,11 @@ export const DataProvider = ({ children }) => {
             setAppointmentTitle('');
             setAppointmentDetails('');
             setStartDate('');
-            setSelectedDoctor({})
+            setSelectedDoctor({});
+            redirect('/');
         } catch (err) {
             console.log(`Error: ${err.message}`);
         }
-        redirect('/');
     }
 
     // Delete appointment
@@ -92,10 +92,10 @@ export const DataProvider = ({ children }) => {
             setAppointments(appointments.map(appt => appt._id === _id ? { ...response.data } : appt))
             setEditTitle('');
             setEditDetails('');
+            redirect('/');
         } catch (err) {
             console.log(`Error: ${err.message}`);
         }
-        redirect('/');
     }
 
     const handleTimeChange = (e) => {

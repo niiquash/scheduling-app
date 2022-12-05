@@ -59,7 +59,7 @@ const NewAppointment = () => {
                 <label htmlFor="general">General Ailment: </label>
                 <input type="text"
                     value={appointmentTitle}
-                    id="apptTime"
+                    id="apptOverview"
                     readOnly
                 />
 

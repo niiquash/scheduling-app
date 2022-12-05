@@ -35,7 +35,6 @@ const useAxiosFetch = (dataUrl) => {
         fetchAppointments(dataUrl);
 
         const cleanUp = () => {
-            console.log('cleanup function');
             isMounted = false;
             source.cancel();
         }
@@ -105,7 +104,6 @@ const useAxiosFetch = (dataUrl) => {
         fetchAilments(dataUrl);
 
         const cleanUp = () => {
-            console.log('cleanup function');
             isMounted = false;
             source.cancel();
         }

@@ -41,8 +41,6 @@ const EditAppointment = () => {
 
     }, [appointment, setEditTitle, setEditDetails])
 
-    console.log(editTitle);
-    console.log(editDetails);
     return (
         <main>
             {editTitle &&
