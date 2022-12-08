@@ -1,27 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
-import DataContext from '../context/DataContext';
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 const Nav = () => {
-
-    const { search, setSearch } = useContext(DataContext);
-
+    const { isAuthenticated } = useAuth0();
     return (
         <nav className='Nav'>
-            <form className='searchForm' onSubmit={(e) => e.preventDefault()}>
-                <label htmlFor="search">Search Appointments</label>
-                <input
-                    type="text"
-                    id="search"
-                    placeholder="Search Appointments"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-            </form>
+
             <ul>
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/appointment">Appointment</Link></li>
+                {isAuthenticated ?
+                    <li><Link to="/appointment">New Appointment</Link></li>
+                    :
+                    <li><Link to="/alert">New Appointment</Link></li>
+                }
                 <li><Link to="/about">About</Link></li>
             </ul>
         </nav>
